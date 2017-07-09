@@ -1,0 +1,32 @@
+﻿@model Store.WebUI.Models.NavigationModels.OrdersListViewModel
+
+<table>
+    <tr>
+        <th>Number</th>
+        <th>Water</th>
+        <th>Manager</th>
+        <th>Order Date</th>
+        <th></th>
+    </tr>
+
+    @foreach (var order in Model.Orders)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => order.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.WaterDTO.Provider)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.ManagerDTO.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderDate)
+            </td>
+            <td>
+                <a href="EditOrder/?orderId=@order.Id" class="orderItem">Edit</a>
+            </td>
+        </tr>
+    }
+</table>

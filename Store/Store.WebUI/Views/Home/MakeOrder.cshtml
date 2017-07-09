@@ -1,0 +1,47 @@
+﻿@model Store.BLL.ModelsDTO.OrderDTO
+
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+        <h4>@ViewBag.WaterProvider</h4>
+    </div>
+    <div class="modal-body">
+
+        @using (Html.BeginForm("MakeOrder", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <input type="hidden" value="@ViewBag.WaterId" name="WaterId" />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ManagerDTO.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.ManagerId, ViewBag.Managers as SelectList, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ManagerDTO.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Annotation, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Annotation, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Make Order" id="status" class="btn btn-success" />
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
