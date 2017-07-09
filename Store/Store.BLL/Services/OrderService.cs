@@ -55,7 +55,7 @@ namespace Store.BLL.Services
         {
             var user = _mapper.Map<UserDTO, User>(userDTO);
             var userFromDb = db.Users.Find(u => u.Email == userDTO.Email);
-            if(userFromDb != null)
+            if (userFromDb != null)
                 throw new ValidationException("Sorry, but the user with the same Email is already exsist");
             db.Users.Create(user);
             db.Save();
@@ -79,7 +79,7 @@ namespace Store.BLL.Services
         {
             var order = db.Orders.GetAll().LastOrDefault();
             if (order == null)
-                return "N";
+                return "N0";
             var number = "N" + order.Id;
             return number;
         }
@@ -87,18 +87,24 @@ namespace Store.BLL.Services
         public OrderDTO GetOrderById(int orderId)
         {
             var order = db.Orders.Get(orderId);
+            if (order == null)
+                throw new Exception("Sorry, but the order is not exsist");
             return _mapper.Map<Order, OrderDTO>(order);
         }
 
         public WaterDTO GetWaterById(int id)
         {
-            var Water = db.Water.Find(h => h.Id == id).FirstOrDefault();
-            return _mapper.Map<Water, WaterDTO>(Water);
+            var water = db.Water.Find(h => h.Id == id).FirstOrDefault();
+            if (water == null)
+                throw new Exception("Sorry, but the water is not exsist");
+            return _mapper.Map<Water, WaterDTO>(water);
         }
 
         public UserDTO GetUserByEmail(string email)
         {
             var user = db.Users.Find(u => u.Email == email).FirstOrDefault();
+            if (user == null)
+                throw new Exception("Sorry, but the user is not exsist");
             return _mapper.Map<User, UserDTO>(user);
         }
 

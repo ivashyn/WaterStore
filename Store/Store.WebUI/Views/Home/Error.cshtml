@@ -1,0 +1,26 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Error 404</title>
+    <link href="~/Content/404style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="wrap">
+        <div class="header">
+            <div class="logo">
+                <h1><a href="#">Ohh</a></h1>
+            </div>
+        </div>
+        <div class="content">
+            <img src="~/Content/Images/error-img.png" title="error" />
+            <p><span><label>O</label>hh.....</span>@ViewBag.ErrorText</p>
+            <a href="@Url.Action("Index","Home")">Back To Home</a>
+        </div>
+    </div>
+</body>
+</html>

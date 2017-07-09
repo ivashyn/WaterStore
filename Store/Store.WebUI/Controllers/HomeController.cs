@@ -64,7 +64,16 @@ namespace Store.WebUI.Controllers
         public ActionResult EditOrder(int orderId)
         {
             ViewBag.OrderId = orderId;
-            var order = _orderService.GetOrderById(orderId);
+            var order = new OrderDTO();
+            try
+            {
+                 order = _orderService.GetOrderById(orderId);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { @errorText = ex.Message });
+            }
+            
             ViewBag.WaterProvider = new SelectList(_orderService.GetAllWater(), "Id","Provider");
             ViewBag.Managers = new SelectList(_orderService.GetAllManagers(), "Id", "Name");
             return PartialView(order);
@@ -89,7 +98,7 @@ namespace Store.WebUI.Controllers
         }
 
         [Authorize]
-        public ActionResult MyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
+        public ActionResult MyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
         {
             var ordersViewModel = GetMyOrders(waterId, managerId, page, ordersPerPage);
             return View(ordersViewModel);
@@ -107,6 +116,28 @@ namespace Store.WebUI.Controllers
             Filter(ref allUsersOrders, ref ordersOnPage, userId, ref totalOrders, ref recorderOrdersOnPageAndTotalOrders, waterId, managerId, page, ordersPerPage);
             var ordersViewModel = Pagination(ordersOnPage, allUsersOrders, totalOrders, recorderOrdersOnPageAndTotalOrders, page, ordersPerPage);
             return ordersViewModel;
+        }
+
+        public ActionResult GetGoogleChart()
+        {
+            var waterOrdersCount = GetWaterOrdersCount();
+            return PartialView(waterOrdersCount);
+        }
+
+        public Dictionary<string,int> GetWaterOrdersCount()
+        {
+            var userEmail = User.Identity.Name;
+            var userId = _orderService.GetUserByEmail(userEmail).Id;
+
+            var waterOrdersCount = new Dictionary<string, int>();
+            var water = _orderService.GetAllWater();
+            var amount = 0;
+            foreach (var item in water)
+            {
+                amount = _orderService.GetUsersOrdersByWater(userId, item.Id).Count();
+                waterOrdersCount.Add(item.Provider, amount);
+            }
+            return waterOrdersCount;
         }
 
         private void Filter(ref IEnumerable<OrderDTO> allUsersOrders,ref IEnumerable<OrderDTO> ordersOnPage, int userId, ref int totalOrders, ref bool recorderOrdersOnPageAndTotalOrders, int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
@@ -164,6 +195,12 @@ namespace Store.WebUI.Controllers
                 PageInfo = pageInfo
             };
             return ordersViewModel;
+        }
+
+        public ActionResult Error(string errorText = "You Requested the page that is no longer There.")
+        {
+            ViewBag.ErrorText = errorText;
+            return View();
         }
 
         public ActionResult About()

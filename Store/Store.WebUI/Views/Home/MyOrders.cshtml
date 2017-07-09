@@ -32,10 +32,9 @@
     </div>
 }
 
-
 <div id="results">
     @{
-        Html.RenderPartial("GetOrdersPartial", Model);
+        Html.RenderPartial("GetOrdersPartial");
     }
 </div>
 
@@ -44,6 +43,11 @@
     @Html.PageLinks(Model.PageInfo, x => Url.Action("MyOrders", new { page = x, managerId = 0, waterId = 0, ordersPerPage = 10 }))
 </div>
 
+<br />
+<br />
+<div class="btn btn-default">
+    <a href="GetGoogleChart/" class="googleChart">Show chart</a>
+</div>
 
 @section scripts
 {
@@ -88,7 +92,7 @@
             $('#pageLinks').click(function (e) {
                 var page = $(event.target).text();
                 e.preventDefault();
-                var href = "http://localhost:49261/Home/GetOrdersPartial?page=" + page + "&managerId=" + managerId + "&waterId=" + waterId + "&ordersPerPage=" + ordersPerPage;
+                var href = "/Home/GetOrdersPartial?page=" + page + "&managerId=" + managerId + "&waterId=" + waterId + "&ordersPerPage=" + ordersPerPage;
                 $('#results').load(href);
 
             });
@@ -99,6 +103,18 @@
         $(function () {
             $.ajaxSetup({ cache: false });
             $(".orderItem").click(function (e) {
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+
+        //modal Window for GoogleChard
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".googleChart").click(function (e) {
                 e.preventDefault();
                 $.get(this.href, function (data) {
                     $('#dialogContent').html(data);

@@ -1,0 +1,50 @@
+﻿@model Dictionary<string, int>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var length = @Model.Count;
+        var keys = [];
+        var values = [];
+        @foreach (var item in Model)
+        {
+            @:keys.push('@item.Key');
+            @:values.push('@item.Value');
+        }
+        var dictionary = new Array(length);
+        for (var i = 0; i < length; i++) {
+            dictionary[i] = [keys[i], values[i]];
+        }
+        var data = new google.visualization.DataTable();
+
+        data.addColumn('string', 'Water');
+        data.addColumn('number', 'Amount');
+        data.addRows(length);
+        for (var i = 0; i < length; i++) {
+            data.setValue(i, 0, keys[i]);
+            data.setValue(i, 1, values[i]);
+        }
+        var options = {
+            title: 'My water orders',
+            is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+    }
+</script>
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+        <h4>Google Chart</h4>
+    </div>
+    <div class="modal-body">
+
+        <div id="piechart_3d" style="width: 500px; height: 400px;"></div>
+
+    </div>
+
+</div>
