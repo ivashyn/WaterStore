@@ -13,24 +13,26 @@ namespace Store.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        IOrderService _orderService;
-        public HomeController(IOrderService orderService)
+        IStoreService _storeService;
+        public HomeController(IStoreService orderService)
         {
-            _orderService = orderService;
+            _storeService = orderService;
         }
 
 
         public ActionResult Index()
         {
-            var water = _orderService.GetAllWater();
+            var water = _storeService.GetAllWater();
             return View(water);
         }
 
         public ActionResult MakeOrder(int waterId)
         {
             ViewBag.WaterId = waterId;
-            ViewBag.WaterProvider = _orderService.GetWaterById(waterId).Provider;
-            ViewBag.Managers = new SelectList(_orderService.GetAllManagers(), "Id", "Name");
+            var water = _storeService.GetWaterById(waterId);
+            ViewBag.WaterProvider = water.Provider;
+            ViewBag.WaterImageName = water.ImageName;
+            ViewBag.Managers = new SelectList(_storeService.GetAllManagers(), "Id", "Name");
             return PartialView(new OrderDTO());  //OrderViewModel
         }
 
@@ -40,10 +42,17 @@ namespace Store.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 var userEmail = User.Identity.Name;
-                var userId = _orderService.GetUserByEmail(userEmail).Id;
+                var userId = _storeService.GetUserByEmail(userEmail).Id;
                 order.UserId = userId;
                 order.Number = CreateOrderNumber();
-                _orderService.MakeOrder(order);
+                try
+                {
+                    _storeService.MakeOrder(order);
+                }
+                catch (Exception ex)
+                {
+                    return RedirectToAction("Error", "Home", new { @errorText = ex.Message });
+                }
                 return RedirectToAction("MyOrders");
             }
             return View(order);
@@ -52,9 +61,9 @@ namespace Store.WebUI.Controllers
         private string CreateOrderNumber()
         {
             var userEmail = User.Identity.Name;
-            var userId = _orderService.GetUserByEmail(userEmail).Id;
+            var userId = _storeService.GetUserByEmail(userEmail).Id;
 
-            var lastOrdersNumber = _orderService.GetLastOrderNumber();
+            var lastOrdersNumber = _storeService.GetLastOrderNumber();
             var numbers = Convert.ToInt32(lastOrdersNumber.Substring(1));
             numbers++;
             var orderNumber = "N" + numbers;
@@ -67,15 +76,17 @@ namespace Store.WebUI.Controllers
             var order = new OrderDTO();
             try
             {
-                 order = _orderService.GetOrderById(orderId);
+                 order = _storeService.GetOrderById(orderId);
             }
             catch (Exception ex)
             {
                 return RedirectToAction("Error", "Home", new { @errorText = ex.Message });
             }
             
-            ViewBag.WaterProvider = new SelectList(_orderService.GetAllWater(), "Id","Provider");
-            ViewBag.Managers = new SelectList(_orderService.GetAllManagers(), "Id", "Name");
+            ViewBag.WaterImageName = order.WaterDTO.ImageName;
+
+            ViewBag.WaterProvider = new SelectList(_storeService.GetAllWater(), "Id","Provider");
+            ViewBag.Managers = new SelectList(_storeService.GetAllManagers(), "Id", "Name");
             return PartialView(order);
         }
 
@@ -84,14 +95,14 @@ namespace Store.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _orderService.EditOrder(order);
+                _storeService.EditOrder(order);
                 return RedirectToAction("MyOrders");
             }
             return View(order);
         }
 
         [Authorize]
-        public ActionResult GetOrdersPartial(int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
+        public ActionResult GetOrdersPartial(int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
         {
             var ordersViewModel = GetMyOrders(waterId, managerId, page, ordersPerPage);
             return PartialView(ordersViewModel);
@@ -104,12 +115,12 @@ namespace Store.WebUI.Controllers
             return View(ordersViewModel);
         }
 
-        public OrdersListViewModel GetMyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
+        public OrdersListViewModel GetMyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
         {
             int totalOrders = 0;
             bool recorderOrdersOnPageAndTotalOrders = false;
             var userEmail = User.Identity.Name;
-            var userId = _orderService.GetUserByEmail(userEmail).Id;
+            var userId = _storeService.GetUserByEmail(userEmail).Id;
             IEnumerable<OrderDTO> allUsersOrders = new List<OrderDTO>();
             IEnumerable<OrderDTO> ordersOnPage = new List<OrderDTO>();
 
@@ -127,51 +138,51 @@ namespace Store.WebUI.Controllers
         public Dictionary<string,int> GetWaterOrdersCount()
         {
             var userEmail = User.Identity.Name;
-            var userId = _orderService.GetUserByEmail(userEmail).Id;
+            var userId = _storeService.GetUserByEmail(userEmail).Id;
 
             var waterOrdersCount = new Dictionary<string, int>();
-            var water = _orderService.GetAllWater();
+            var water = _storeService.GetAllWater();
             var amount = 0;
             foreach (var item in water)
             {
-                amount = _orderService.GetUsersOrdersByWater(userId, item.Id).Count();
+                amount = _storeService.GetUsersOrdersByWater(userId, item.Id).Count();
                 waterOrdersCount.Add(item.Provider, amount);
             }
             return waterOrdersCount;
         }
 
-        private void Filter(ref IEnumerable<OrderDTO> allUsersOrders,ref IEnumerable<OrderDTO> ordersOnPage, int userId, ref int totalOrders, ref bool recorderOrdersOnPageAndTotalOrders, int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
+        private void Filter(ref IEnumerable<OrderDTO> allUsersOrders,ref IEnumerable<OrderDTO> ordersOnPage, int userId, ref int totalOrders, ref bool recorderOrdersOnPageAndTotalOrders, int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
         {
             if (waterId != null && waterId != 0)
             {
                 //waterId == 7, managerId == 2
                 if (managerId != null && managerId != 0)
                 {
-                    allUsersOrders = _orderService.GetUsersOrders(userId, Convert.ToInt32(waterId), Convert.ToInt32(managerId));//orders.Where(p => p.ManagerId == managerId);
+                    allUsersOrders = _storeService.GetUsersOrders(userId, Convert.ToInt32(waterId), Convert.ToInt32(managerId));//orders.Where(p => p.ManagerId == managerId);
                 }
                 //waterId == 7
                 else
                 {
-                    allUsersOrders = _orderService.GetUsersOrdersByWater(userId, Convert.ToInt32(waterId)); // orders.Where(p => p.WaterId == waterId);
+                    allUsersOrders = _storeService.GetUsersOrdersByWater(userId, Convert.ToInt32(waterId)); // orders.Where(p => p.WaterId == waterId);
                 }
             }
                 //managerId == 2
             else if (managerId != null && managerId != 0)
             {
-                allUsersOrders = _orderService.GetUsersOrdersByManager(userId, Convert.ToInt32(managerId));//orders.Where(p => p.ManagerId == managerId);
+                allUsersOrders = _storeService.GetUsersOrdersByManager(userId, Convert.ToInt32(managerId));//orders.Where(p => p.ManagerId == managerId);
             }
             //waterId == 0, managerId == 0 
             else
             {
-                allUsersOrders = _orderService.GetNUsersOrders(userId, ordersPerPage, (page - 1) * ordersPerPage);
+                allUsersOrders = _storeService.GetNUsersOrders(userId, ordersPerPage, (page - 1) * ordersPerPage);
                 ordersOnPage = allUsersOrders;
-                totalOrders = _orderService.GetTotalUsersOrdersCount(userId);
+                totalOrders = _storeService.GetTotalUsersOrdersCount(userId);
                 recorderOrdersOnPageAndTotalOrders = true;
             }
         }
 
 
-        private OrdersListViewModel Pagination(IEnumerable<OrderDTO> ordersOnPage, IEnumerable<OrderDTO> allUsersOrders, int totalOrders, bool recorderOrdersOnPageAndTotalOrders, int page = 1, int ordersPerPage = 10)
+        private OrdersListViewModel Pagination(IEnumerable<OrderDTO> ordersOnPage, IEnumerable<OrderDTO> allUsersOrders, int totalOrders, bool recorderOrdersOnPageAndTotalOrders, int page = 1, int ordersPerPage = 15)
         {
             if (!recorderOrdersOnPageAndTotalOrders)
             {
@@ -180,10 +191,10 @@ namespace Store.WebUI.Controllers
             }
             PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = ordersPerPage, TotalItems = totalOrders };
 
-            List<ManagerDTO> managers = _orderService.GetAllManagers().ToList();
+            List<ManagerDTO> managers = _storeService.GetAllManagers().ToList();
             managers.Insert(0, new ManagerDTO { Name = "All", Id = 0 });
 
-            List<WaterDTO> water = _orderService.GetAllWater().ToList();
+            List<WaterDTO> water = _storeService.GetAllWater().ToList();
             water.Insert(0, new WaterDTO { Provider = "All", Id = 0 });
 
             var ordersViewModel = new OrdersListViewModel

@@ -20,15 +20,15 @@ namespace Store.WebUI.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        IOrderService _orderService;
+        IStoreService _orderService;
         IMapper _mapper;
 
-        public AccountController(IOrderService orderService)
+        public AccountController(IStoreService orderService)
         {
             _orderService = orderService;
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IOrderService orderService )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IStoreService orderService )
         {
             UserManager = userManager;
             SignInManager = signInManager;            

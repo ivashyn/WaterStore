@@ -13,6 +13,6 @@ namespace Store.DAL.Entities
         public double Volume { get; set; }
         public string BottleType { get; set; }
         public double Price { get; set; }
-
+        public string ImageName { get; set; }
     }
 }

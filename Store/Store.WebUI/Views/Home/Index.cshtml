@@ -11,15 +11,20 @@
 <div class="row">
     @foreach (var water in Model)
     {
-        <div class="col-md-3">
+        <div class="col-md-3" id="waterBottle" style="height:270px; padding-top:15px; border:1px solid red; margin: 10px;">
+            <img src="~/Content/Images/water/@water.ImageName" />
             <a href="Home/MakeOrder/?waterId=@water.Id" class="waterItem">@water.Provider</a>
             @*@Html.ActionLink(water.Provider, "ConfirmPurchase/?waterId=",
-           new { id = water.Id }, new { @class = "waterItem" })*@
-    </div>
+                new { id = water.Id }, new { @class = "waterItem" })*@
+        </div>
     }
 </div>
 
 
+<div class="login" style="margin-top:35px;">
+    <b>Login:</b> Ivashyn.vadym@gmail.com <br />
+    <b>Password:</b> Ivashyn_1995
+</div>
 
 
 @section scripts

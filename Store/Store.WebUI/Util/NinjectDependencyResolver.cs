@@ -27,7 +27,7 @@ namespace Store.WebUI.Util
         }
         private void AddBindings()
         {
-            kernel.Bind<IOrderService>().To<OrderService>();
+            kernel.Bind<IStoreService>().To<StoreService>();
         }
     }
 }

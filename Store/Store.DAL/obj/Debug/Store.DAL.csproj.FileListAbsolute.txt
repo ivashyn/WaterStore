@@ -8,3 +8,13 @@ D:\zevas\Git_Repositories\КиївГазТест\Store\Store.DAL\bin\Debug\Entit
 D:\zevas\Git_Repositories\КиївГазТест\Store\Store.DAL\obj\Debug\Store.DAL.dll
 D:\zevas\Git_Repositories\КиївГазТест\Store\Store.DAL\obj\Debug\Store.DAL.pdb
 D:\zevas\Git_Repositories\КиївГазТест\Store\Store.DAL\obj\Debug\Store.DAL.csprojResolveAssemblyReference.cache
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\obj\Debug\Store.DAL.csprojResolveAssemblyReference.cache
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\obj\Debug\Store.DAL.dll
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\obj\Debug\Store.DAL.pdb
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\Store.DAL.dll.config
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\Store.DAL.dll
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\Store.DAL.pdb
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\EntityFramework.dll
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\EntityFramework.SqlServer.dll
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\EntityFramework.xml
+D:\zevas\Git_Repositories\КиївГазТест\WaterStore\Store\Store.DAL\bin\Debug\EntityFramework.SqlServer.xml

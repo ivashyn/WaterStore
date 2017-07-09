@@ -14,7 +14,7 @@ namespace Store.DAL.Entities
         [StringLength(50)]
         public string Number { get; set; }
         public DateTime OrderDate { get; set; }
-        [StringLength(20)]
+        [StringLength(2000)]
         public string Annotation { get; set; }
         public int UserId { get; set; }
 

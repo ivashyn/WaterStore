@@ -31,17 +31,17 @@ namespace Store.DAL.EFContext
     {
         protected override void Seed(StoreContext db)
         {
-            db.Water.Add(new Water { Id = 1, Provider = "Vesna", Volume = 18.9, BottleType = "Glass", Price = 56 });
-            db.Water.Add(new Water { Id = 2, Provider = "Oazys", Volume = 18.9, BottleType = "Polycarbonate", Price = 52 });
-            db.Water.Add(new Water { Id = 3, Provider = "Berehynia", Volume = 18.9, BottleType = "Polycarbonate", Price = 63 });
-            db.Water.Add(new Water { Id = 4, Provider = "Sribna", Volume = 20, BottleType = "Polycarbonate", Price = 72 });
-            db.Water.Add(new Water { Id = 5, Provider = "Effect", Volume = 18.9, BottleType = "Polycarbonate", Price = 60 });
-            db.Water.Add(new Water { Id = 6, Provider = "Aisberg", Volume = 19, BottleType = "Polycarbonate", Price = 49 });
-            db.Water.Add(new Water { Id = 7, Provider = "Arhyz", Volume = 19, BottleType = "Polycarbonate", Price = 280 });
-            db.Water.Add(new Water { Id = 8, Provider = "Ecobutel", Volume = 11.3, BottleType = "Glass", Price = 109 });
-            db.Water.Add(new Water { Id = 9, Provider = "Etalon", Volume = 20, BottleType = "Glass", Price = 97 });
-            db.Water.Add(new Water { Id = 10, Provider = "Ukrainochka", Volume = 19, BottleType = "Glass", Price = 350 });
-            db.Water.Add(new Water { Id = 11, Provider = "Tayana", Volume = 18.9, BottleType = "Polycarbonate", Price = 68 });
+            db.Water.Add(new Water { Id = 1, Provider = "Vesna", Volume = 18.9, BottleType = "Glass", ImageName = "vesna.jpg", Price = 56 });
+            db.Water.Add(new Water { Id = 2, Provider = "Oazys", Volume = 18.9, BottleType = "Polycarbonate", ImageName = "oasis.jpg", Price = 52 });
+            db.Water.Add(new Water { Id = 3, Provider = "Berehynia", Volume = 18.9, BottleType = "Polycarbonate", ImageName = "berehynya.jpg", Price = 63 });
+            db.Water.Add(new Water { Id = 4, Provider = "Sribna", Volume = 20, BottleType = "Polycarbonate", ImageName = "sribna.jpg", Price = 72 });
+            db.Water.Add(new Water { Id = 5, Provider = "Effect", Volume = 18.9, BottleType = "Polycarbonate", ImageName = "effekt.jpg", Price = 60 });
+            db.Water.Add(new Water { Id = 6, Provider = "Iceberg", Volume = 19, BottleType = "Polycarbonate", ImageName = "iceberg.jpg", Price = 49 });
+            db.Water.Add(new Water { Id = 7, Provider = "Arkhyz", Volume = 19, BottleType = "Polycarbonate", ImageName = "arkhyz19.jpg", Price = 280 });
+            db.Water.Add(new Water { Id = 8, Provider = "Ecobutel", Volume = 11.3, BottleType = "Glass", ImageName = "eco-bottle.jpg", Price = 109 });
+            db.Water.Add(new Water { Id = 9, Provider = "Etalon", Volume = 20, BottleType = "Glass", ImageName = "etalon.jpg", Price = 97 });
+            db.Water.Add(new Water { Id = 10, Provider = "Ukrainochka", Volume = 19, BottleType = "Glass", ImageName = "ukrainochka.jpg", Price = 350 });
+            db.Water.Add(new Water { Id = 11, Provider = "Tayana", Volume = 18.9, BottleType = "Polycarbonate", ImageName = "tayana.jpg", Price = 68 });
 
             db.Managers.Add(new Manager { Id = 1, Name = "Ivanov", Age = 25 });
             db.Managers.Add(new Manager { Id = 2, Name = "Petrov", Age = 20 });

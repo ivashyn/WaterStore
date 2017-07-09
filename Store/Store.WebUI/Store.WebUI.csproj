@@ -224,10 +224,28 @@
     <Compile Include="Util\NinjectDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\404style.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\Images\bg.png" />
+    <Content Include="Content\Images\bg1.png" />
+    <Content Include="Content\Images\error-img.png" />
+    <Content Include="Content\Images\water\arkhyz19.jpg" />
+    <Content Include="Content\Images\water\berehynya.jpg" />
+    <Content Include="Content\Images\water\eco-bottle.jpg" />
+    <Content Include="Content\Images\water\effekt.jpg" />
+    <Content Include="Content\Images\water\etalon.jpg" />
+    <Content Include="Content\Images\water\iceberg.jpg" />
+    <Content Include="Content\Images\water\oasis.jpg" />
+    <Content Include="Content\Images\water\sribna.jpg" />
+    <Content Include="Content\Images\water\tayana.jpg" />
+    <Content Include="Content\Images\water\ukrainochka-s-melaninom.jpg" />
+    <Content Include="Content\Images\water\ukrainochka.jpg" />
+    <Content Include="Content\Images\water\ukrainskaya-pryrodnaya.jpg" />
+    <Content Include="Content\Images\water\vesna.jpg" />
+    <Content Include="Content\Images\water\voda-ukrainochka-s-melaninom-189-l.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -296,7 +314,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
