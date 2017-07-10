@@ -32,3 +32,16 @@
     }
 </table>
 
+<script>
+    //modal Window for Edit order
+    $(function () {
+        $.ajaxSetup({ cache: false });
+        $(".orderItem").click(function (e) {
+            e.preventDefault();
+            $.get(this.href, function (data) {
+                $('#dialogContent').html(data);
+                $('#modDialog').modal('show');
+            });
+        });
+    })
+</script>
