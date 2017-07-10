@@ -26,6 +26,7 @@ namespace Store.WebUI.Controllers
             return View(water);
         }
 
+        
         public ActionResult MakeOrder(int waterId)
         {
             ViewBag.WaterId = waterId;
@@ -37,6 +38,7 @@ namespace Store.WebUI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult MakeOrder(OrderDTO order) //OrderViewModel
         {
             if (ModelState.IsValid)
@@ -129,6 +131,7 @@ namespace Store.WebUI.Controllers
             return ordersViewModel;
         }
 
+        [Authorize]
         public ActionResult GetGoogleChart()
         {
             var waterOrdersCount = GetWaterOrdersCount();

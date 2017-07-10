@@ -54,7 +54,7 @@ namespace Store.BLL.Services
         public void AddUser(UserDTO userDTO)
         {
             var user = _mapper.Map<UserDTO, User>(userDTO);
-            var userFromDb = db.Users.Find(u => u.Email == userDTO.Email);
+            var userFromDb = db.Users.Find(u => u.Email == userDTO.Email).FirstOrDefault();
             if (userFromDb != null)
                 throw new ValidationException("Sorry, but the user with the same Email is already exsist");
             db.Users.Create(user);
