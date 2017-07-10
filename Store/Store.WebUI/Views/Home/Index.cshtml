@@ -8,23 +8,30 @@
     <div id="dialogContent" class="modal-dialog"></div>
 </div>
 
-<div class="row">
-    @foreach (var water in Model)
-    {
-        <div class="col-md-3" id="waterBottle" style="height:270px; padding-top:15px; border:1px solid red; margin: 10px;">
-            <img src="~/Content/Images/water/@water.ImageName" />
-            <a href="Home/MakeOrder/?waterId=@water.Id" class="waterItem">@water.Provider</a>
-            @*@Html.ActionLink(water.Provider, "ConfirmPurchase/?waterId=",
-                new { id = water.Id }, new { @class = "waterItem" })*@
-        </div>
-    }
-</div>
-
-
-<div class="login" style="margin-top:35px;">
+<div class="login">
     <b>Login:</b> Ivashyn.vadym@gmail.com <br />
     <b>Password:</b> Ivashyn_1995
 </div>
+
+<div class="row col-lg-offset-1">
+    @foreach (var water in Model)
+    {
+        <a href="Home/MakeOrder/?waterId=@water.Id" class="waterItem">
+            <div class="col-md-3 waterBottle">
+                <img src="~/Content/Images/water/@water.ImageName" />
+                <div class="description row">
+                    <div class="pull-left">
+                        @water.Provider
+                    </div>
+                    <div class="pull-right price">
+                        @water.Price uah
+                    </div>
+                </div>
+            </div>
+        </a>
+    }
+</div>
+
 
 
 @section scripts
@@ -40,6 +47,10 @@
                     $('#dialogContent').html(data);
                     $('#modDialog').modal('show');
                 });
+            });
+
+            $(".waterBottle").click(function (e) {
+
             });
         })
     </script>

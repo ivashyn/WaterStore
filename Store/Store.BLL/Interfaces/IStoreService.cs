@@ -25,7 +25,6 @@ namespace Store.BLL.Interfaces
         IEnumerable<OrderDTO> GetUsersOrdersByWater(int userId, int waterId);
         IEnumerable<OrderDTO> GetUsersOrdersByManager(int userId, int managerId);
         IEnumerable<OrderDTO> GetUsersOrders(int userId, int waterId, int managerId);
-
         IEnumerable<OrderDTO> GetNUsersOrders(int userId, int amountToTake, int amountToSkip);
     }
 }

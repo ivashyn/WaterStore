@@ -27,7 +27,7 @@ namespace Store.DAL.EFContext
         }
     }
 
-    public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<StoreContext>//DropCreateDatabaseAlways<StoreContext>
+    public class StoreDbInitializer : /*DropCreateDatabaseIfModelChanges<StoreContext>//*/DropCreateDatabaseAlways<StoreContext>
     {
         protected override void Seed(StoreContext db)
         {
@@ -54,7 +54,7 @@ namespace Store.DAL.EFContext
             var managerId = 0;
             var day = 0;
             var month = 0;
-            var records = 500;
+            var records = 100;
             for (int i = 1; i < records; i++)
             {
                 userId = rand.Next(1, 3);

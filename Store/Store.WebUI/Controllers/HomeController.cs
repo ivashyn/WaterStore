@@ -2,7 +2,6 @@
 using Store.BLL.ModelsDTO;
 using Store.WebUI.Models;
 using Store.WebUI.Models.NavigationModels;
-using Store.WebUI.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +25,7 @@ namespace Store.WebUI.Controllers
             return View(water);
         }
 
-        
+
         public ActionResult MakeOrder(int waterId)
         {
             ViewBag.WaterId = waterId;
@@ -34,17 +33,16 @@ namespace Store.WebUI.Controllers
             ViewBag.WaterProvider = water.Provider;
             ViewBag.WaterImageName = water.ImageName;
             ViewBag.Managers = new SelectList(_storeService.GetAllManagers(), "Id", "Name");
-            return PartialView(new OrderDTO());  //OrderViewModel
+            return PartialView(new OrderDTO());
         }
 
         [HttpPost]
         [Authorize]
-        public ActionResult MakeOrder(OrderDTO order) //OrderViewModel
+        public ActionResult MakeOrder(OrderDTO order)
         {
             if (ModelState.IsValid)
             {
-                var userEmail = User.Identity.Name;
-                var userId = _storeService.GetUserByEmail(userEmail).Id;
+                var userId = GetUserId();
                 order.UserId = userId;
                 order.Number = CreateOrderNumber();
                 try
@@ -62,8 +60,7 @@ namespace Store.WebUI.Controllers
 
         private string CreateOrderNumber()
         {
-            var userEmail = User.Identity.Name;
-            var userId = _storeService.GetUserByEmail(userEmail).Id;
+            var userId = GetUserId();
 
             var lastOrdersNumber = _storeService.GetLastOrderNumber();
             var numbers = Convert.ToInt32(lastOrdersNumber.Substring(1));
@@ -72,22 +69,27 @@ namespace Store.WebUI.Controllers
             return orderNumber;
         }
 
+        [Authorize]
         public ActionResult EditOrder(int orderId)
         {
+            var userId = GetUserId();
+
             ViewBag.OrderId = orderId;
             var order = new OrderDTO();
             try
             {
-                 order = _storeService.GetOrderById(orderId);
+                order = _storeService.GetOrderById(orderId);
+                if (order.UserId != userId)
+                    return RedirectToAction("Error", "Home", new { @errorText = "Sorry, but this is not your order" });
             }
             catch (Exception ex)
             {
                 return RedirectToAction("Error", "Home", new { @errorText = ex.Message });
             }
-            
+
             ViewBag.WaterImageName = order.WaterDTO.ImageName;
 
-            ViewBag.WaterProvider = new SelectList(_storeService.GetAllWater(), "Id","Provider");
+            ViewBag.WaterProvider = new SelectList(_storeService.GetAllWater(), "Id", "Provider");
             ViewBag.Managers = new SelectList(_storeService.GetAllManagers(), "Id", "Name");
             return PartialView(order);
         }
@@ -104,25 +106,25 @@ namespace Store.WebUI.Controllers
         }
 
         [Authorize]
-        public ActionResult GetOrdersPartial(int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
+        public ActionResult GetOrdersPartial(int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
         {
             var ordersViewModel = GetMyOrders(waterId, managerId, page, ordersPerPage);
             return PartialView(ordersViewModel);
         }
 
         [Authorize]
-        public ActionResult MyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
+        public ActionResult MyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
         {
             var ordersViewModel = GetMyOrders(waterId, managerId, page, ordersPerPage);
             return View(ordersViewModel);
         }
 
-        public OrdersListViewModel GetMyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
+        public OrdersListViewModel GetMyOrders(int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
         {
+            var userId = GetUserId();
+
             int totalOrders = 0;
             bool recorderOrdersOnPageAndTotalOrders = false;
-            var userEmail = User.Identity.Name;
-            var userId = _storeService.GetUserByEmail(userEmail).Id;
             IEnumerable<OrderDTO> allUsersOrders = new List<OrderDTO>();
             IEnumerable<OrderDTO> ordersOnPage = new List<OrderDTO>();
 
@@ -131,48 +133,25 @@ namespace Store.WebUI.Controllers
             return ordersViewModel;
         }
 
-        [Authorize]
-        public ActionResult GetGoogleChart()
-        {
-            var waterOrdersCount = GetWaterOrdersCount();
-            return PartialView(waterOrdersCount);
-        }
-
-        public Dictionary<string,int> GetWaterOrdersCount()
-        {
-            var userEmail = User.Identity.Name;
-            var userId = _storeService.GetUserByEmail(userEmail).Id;
-
-            var waterOrdersCount = new Dictionary<string, int>();
-            var water = _storeService.GetAllWater();
-            var amount = 0;
-            foreach (var item in water)
-            {
-                amount = _storeService.GetUsersOrdersByWater(userId, item.Id).Count();
-                waterOrdersCount.Add(item.Provider, amount);
-            }
-            return waterOrdersCount;
-        }
-
-        private void Filter(ref IEnumerable<OrderDTO> allUsersOrders,ref IEnumerable<OrderDTO> ordersOnPage, int userId, ref int totalOrders, ref bool recorderOrdersOnPageAndTotalOrders, int? waterId, int? managerId, int page = 1, int ordersPerPage = 15)
+        private void Filter(ref IEnumerable<OrderDTO> allUsersOrders, ref IEnumerable<OrderDTO> ordersOnPage, int userId, ref int totalOrders, ref bool recorderOrdersOnPageAndTotalOrders, int? waterId, int? managerId, int page = 1, int ordersPerPage = 10)
         {
             if (waterId != null && waterId != 0)
             {
                 //waterId == 7, managerId == 2
                 if (managerId != null && managerId != 0)
                 {
-                    allUsersOrders = _storeService.GetUsersOrders(userId, Convert.ToInt32(waterId), Convert.ToInt32(managerId));//orders.Where(p => p.ManagerId == managerId);
+                    allUsersOrders = _storeService.GetUsersOrders(userId, Convert.ToInt32(waterId), Convert.ToInt32(managerId));
                 }
                 //waterId == 7
                 else
                 {
-                    allUsersOrders = _storeService.GetUsersOrdersByWater(userId, Convert.ToInt32(waterId)); // orders.Where(p => p.WaterId == waterId);
+                    allUsersOrders = _storeService.GetUsersOrdersByWater(userId, Convert.ToInt32(waterId));
                 }
             }
-                //managerId == 2
+            //managerId == 2
             else if (managerId != null && managerId != 0)
             {
-                allUsersOrders = _storeService.GetUsersOrdersByManager(userId, Convert.ToInt32(managerId));//orders.Where(p => p.ManagerId == managerId);
+                allUsersOrders = _storeService.GetUsersOrdersByManager(userId, Convert.ToInt32(managerId));
             }
             //waterId == 0, managerId == 0 
             else
@@ -185,7 +164,7 @@ namespace Store.WebUI.Controllers
         }
 
 
-        private OrdersListViewModel Pagination(IEnumerable<OrderDTO> ordersOnPage, IEnumerable<OrderDTO> allUsersOrders, int totalOrders, bool recorderOrdersOnPageAndTotalOrders, int page = 1, int ordersPerPage = 15)
+        private OrdersListViewModel Pagination(IEnumerable<OrderDTO> ordersOnPage, IEnumerable<OrderDTO> allUsersOrders, int totalOrders, bool recorderOrdersOnPageAndTotalOrders, int page = 1, int ordersPerPage = 10)
         {
             if (!recorderOrdersOnPageAndTotalOrders)
             {
@@ -209,6 +188,35 @@ namespace Store.WebUI.Controllers
                 PageInfo = pageInfo
             };
             return ordersViewModel;
+        }
+
+        [Authorize]
+        public ActionResult GetGoogleChart()
+        {
+            var waterOrdersCount = GetWaterOrdersCount();
+            return PartialView(waterOrdersCount);
+        }
+
+        public Dictionary<string, int> GetWaterOrdersCount()
+        {
+            var userId = GetUserId();
+
+            var waterOrdersCount = new Dictionary<string, int>();
+            var water = _storeService.GetAllWater();
+            var amount = 0;
+            foreach (var item in water)
+            {
+                amount = _storeService.GetUsersOrdersByWater(userId, item.Id).Count();
+                waterOrdersCount.Add(item.Provider, amount);
+            }
+            return waterOrdersCount;
+        }
+
+        private int GetUserId()
+        {
+            var userEmail = User.Identity.Name;
+            var userId = _storeService.GetUserByEmail(userEmail).Id;
+            return userId;
         }
 
         public ActionResult Error(string errorText = "You Requested the page that is no longer There.")

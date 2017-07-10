@@ -17,7 +17,7 @@ namespace Store.DAL.Repositories
         ManagerRepository managerRepository;
         UserRepository userRepository;
 
-        public EFUnitOfWork()  //delete connectionString
+        public EFUnitOfWork()
         {
             db = new StoreContext();
         }

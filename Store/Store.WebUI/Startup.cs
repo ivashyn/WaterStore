@@ -22,17 +22,15 @@ namespace Store.WebUI
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-
-            // In Startup iam creating first Admin Role and creating a default Admin User    
+   
             if (!roleManager.RoleExists("Admin"))
             {
 
-                // first we create Admin rool   
+                //create Admin role  
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "Admin";
                 roleManager.Create(role);
 
-                //Here we create a Admin super user who will maintain the website                  
 
                 var user = new ApplicationUser();
                 user.UserName = "ivashyn.vadym@gmail.com";
@@ -46,20 +44,15 @@ namespace Store.WebUI
                 if (chkUser.Succeeded)
                 {
                     var result1 = UserManager.AddToRole(user.Id, "Admin");
-
                 }
             }
 
-            // creating Creating User role    
+            // Creating User role    
             if (!roleManager.RoleExists("User"))
             {
-
-                // first we create Admin rool   
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "User";
                 roleManager.Create(role);
-
-                //Here we create a Admin super user who will maintain the website                  
 
                 var user = new ApplicationUser();
                 user.UserName = "user@gmail.com";

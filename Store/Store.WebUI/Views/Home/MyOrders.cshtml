@@ -4,7 +4,30 @@
     ViewBag.Title = "My Orders";
 }
 
+<style>
+    .form-control {
+        width: 130px;
+    }
+    .control-label{
+        margin-right:5px;
+    }
+
+    .form-element{
+        margin-right:25px;
+    }
+
+    .googleChart, .googleChart:hover, .googleChart:visited, .googleChart:active {
+        text-decoration: none;
+        color: white;
+    } 
+    
+    #results {
+        margin-top: 20px
+    }
+</style>
+
 <h2>My Orders</h2>
+<br />
 
 <div id="modDialog" class="modal fade">
     <div id="dialogContent" class="modal-dialog"></div>
@@ -13,22 +36,30 @@
 @using (Ajax.BeginForm("MyOrders", new AjaxOptions { UpdateTargetId = "results" }))
 {
     <div class="form-inline">
-        <label class="control-label">Manager: </label>
-        @Html.DropDownList("managerId", Model.Managers as SelectList,
+        <span class="form-element">
+            <label class="control-label">Manager: </label>
+            @Html.DropDownList("managerId", Model.Managers as SelectList,
                   htmlAttributes: new { @class = "form-control" })
+        </span>
 
-
-        <label class="control-label">Water: </label>
-        @Html.DropDownList("waterId", Model.Water as SelectList,
+        <span class="form-element">
+            <label class="control-label">Water: </label>
+            @Html.DropDownList("waterId", Model.Water as SelectList,
                       htmlAttributes: new { @class = "form-control" })
-
-        <label class="control-label">Orders per page: </label>
-        @Html.DropDownList("ordersPerPage", Model.ObjectsPerPage as SelectList,
+        </span>
+        
+        <span class="form-element">
+            <label class="control-label">Orders per page: </label>
+            @Html.DropDownList("ordersPerPage", Model.ObjectsPerPage as SelectList,
                       htmlAttributes: new { @class = "form-control" })
-
+        </span>
 
 
         <input type="submit" value="Search" class="btn btn-success" />
+
+        <div class="btn btn-success pull-right">
+            <a href="GetGoogleChart/" class="googleChart">Show chart</a>
+        </div>
     </div>
 }
 
@@ -40,14 +71,10 @@
 
 <br />
 <div class="btn-group" id="pageLinks">
-    @Html.PageLinks(Model.PageInfo, x => Url.Action("MyOrders", new { page = x, managerId = 0, waterId = 0, ordersPerPage = 15 }))
+    @Html.PageLinks(Model.PageInfo, x => Url.Action("MyOrders", new { page = x, managerId = 0, waterId = 0, ordersPerPage = 10 }))
 </div>
 
-<br />
-<br />
-<div class="btn btn-default">
-    <a href="GetGoogleChart/" class="googleChart">Show chart</a>
-</div>
+
 
 @section scripts
 {
@@ -90,6 +117,8 @@
 
 
             $('#pageLinks').click(function (e) {
+                $("#pageLinks").children().removeClass('btn-primary selected');
+                $(event.target).addClass('btn-primary selected');
                 var page = $(event.target).text();
                 e.preventDefault();
                 var href = "/Home/GetOrdersPartial?page=" + page + "&managerId=" + managerId + "&waterId=" + waterId + "&ordersPerPage=" + ordersPerPage;

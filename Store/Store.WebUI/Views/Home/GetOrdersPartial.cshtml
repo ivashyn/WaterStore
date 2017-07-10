@@ -1,6 +1,7 @@
 ﻿@model Store.WebUI.Models.NavigationModels.OrdersListViewModel
 
-<table>
+
+<table class="table">
     <tr>
         <th>Number</th>
         <th>Water</th>
@@ -11,7 +12,7 @@
 
     @foreach (var order in Model.Orders)
     {
-        <tr>
+        <tr scope="row">
             <td>
                 @Html.DisplayFor(modelItem => order.Number)
             </td>
@@ -30,3 +31,4 @@
         </tr>
     }
 </table>
+
